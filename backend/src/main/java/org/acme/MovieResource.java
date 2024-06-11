@@ -1,5 +1,6 @@
 package org.acme;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -24,12 +25,14 @@ public class MovieResource {
     }
 
     @GET
+    @PermitAll
     public List<Movie> getAll() {
         return movieService.getAllMovies();
     }
 
     @POST
     @Path("/add")
+    @RolesAllowed("admin")
     public Response create(Movie movie) {
         System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         System.out.println("entrou create");
@@ -51,6 +54,7 @@ public class MovieResource {
 
     @PUT
     @Path("/{id}/update")
+    @RolesAllowed("admin")
     public Response update(@PathParam("id") Long id, Movie movie) {
         LOGGER.info("Recebendo solicitação para atualizar filme com ID " + id + ": " + movie);
         Movie updatedMovie = movieService.updateMovie(id, movie);
