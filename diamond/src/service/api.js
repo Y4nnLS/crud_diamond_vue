@@ -1,9 +1,6 @@
 import axios from 'axios';
+import { keycloak } from '@/main.js';
 
-// Obtém o token de acesso do Keycloak
-import { keycloak } from '@/main.js'; // Certifique-se de substituir pelo caminho correto para o seu arquivo main.js
-
-// Cria uma instância do Axios com a configuração básica
 const api = axios.create({
   baseURL: 'http://localhost:8080',
   headers: {
@@ -11,16 +8,32 @@ const api = axios.create({
   }
 });
 
-// Interceptar respostas para verificar se o token expirou
-api.interceptors.response.use(response => {
-  return response;
-}, error => {
-  if (error.response.status === 401) {
-    keycloak.logout(); // Redirecionar para o logout do Keycloak se o token estiver expirado
+api.interceptors.request.use(async config => {
+  if (keycloak.token) {
+    try {
+      await keycloak.updateToken(30);
+      console.log("Token atualizado:", keycloak.token); // Adicione esta linha para verificar o token
+    } catch (error) {
+      console.log("Erro ao atualizar o token", error);
+      // keycloak.login();
+    }
+    config.headers.Authorization = `Bearer ${keycloak.token}`;
   }
+  return config;
+}, error => {
   return Promise.reject(error);
 });
 
+
+api.interceptors.response.use(response => {
+  return response;
+}, error => {
+  if (error.response && error.response.status === 401) {
+    console.log("Token expirado ou inválido, redirecionando para o login");
+    // keycloak.login();
+  }
+  return Promise.reject(error);
+});
 
 export default {
   createMovie(movie) {

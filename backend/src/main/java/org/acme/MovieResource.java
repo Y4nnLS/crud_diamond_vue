@@ -1,5 +1,6 @@
 package org.acme;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -62,6 +63,7 @@ public class MovieResource {
 
     @DELETE
     @Path("/{id}/delete")
+    @RolesAllowed("admin")
     public Response delete(@PathParam("id") Long id) {
         LOGGER.info("Recebendo solicitação para deletar filme com ID " + id);
         boolean deleted = movieService.deleteMovie(id);

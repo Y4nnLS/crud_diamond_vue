@@ -105,7 +105,6 @@ const initOptions = {
 const keycloak = new Keycloak(initOptions);
 
 keycloak.init({ onLoad: initOptions.onLoad }).then(authenticated => {
-    console.log(`Authenticated: ${authenticated}`);
     if (authenticated) {
         console.log("User is authenticated");
         console.log("Access Token:", keycloak.token);
@@ -211,6 +210,7 @@ keycloak.init({ onLoad: initOptions.onLoad }).then(authenticated => {
         app.mount('#app');
     } else {
         console.warn('Not authenticated');
+        keycloak.login();
     }
 }).catch(error => {
     console.error(`Keycloak initialization error: ${error}`);
