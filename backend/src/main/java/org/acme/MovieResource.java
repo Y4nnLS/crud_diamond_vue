@@ -11,7 +11,7 @@ import org.jboss.logging.Logger;
 import io.quarkus.security.Authenticated;
 
 @Path("/movies")
-@Authenticated
+// @Authenticated
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MovieResource {
@@ -32,7 +32,7 @@ public class MovieResource {
 
     @POST
     @Path("/add")
-    @RolesAllowed("admin")
+    // @RolesAllowed("admin")
     public Response create(Movie movie) {
         System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         System.out.println("entrou create");
@@ -54,7 +54,7 @@ public class MovieResource {
 
     @PUT
     @Path("/{id}/update")
-    @RolesAllowed("admin")
+    // @RolesAllowed("admin")
     public Response update(@PathParam("id") Long id, Movie movie) {
         LOGGER.info("Recebendo solicitação para atualizar filme com ID " + id + ": " + movie);
         Movie updatedMovie = movieService.updateMovie(id, movie);
@@ -67,7 +67,7 @@ public class MovieResource {
 
     @DELETE
     @Path("/{id}/delete")
-    @RolesAllowed("admin")
+    // @RolesAllowed("admin")
     public Response delete(@PathParam("id") Long id) {
         LOGGER.info("Recebendo solicitação para deletar filme com ID " + id);
         boolean deleted = movieService.deleteMovie(id);
